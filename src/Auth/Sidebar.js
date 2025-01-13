@@ -68,7 +68,7 @@ const Sidebar = () => {
                             to="/add-Architect"
                             className="flex items-center px-5 py-3 text-purple-800 transition-all duration-300 ease-in-out transform bg-transparent rounded-lg hover:bg-purple-600 hover:text-white hover:scale-100">
                             <FaFileAlt className="mr-3" />
-                            <span>Add Aatricture</span>
+                            <span>Add Architect</span>
                         </Link>
                     </li>
 
