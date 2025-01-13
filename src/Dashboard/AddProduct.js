@@ -121,14 +121,7 @@ const AddProduct = () => {
                                 placeholder="Category"
                                 className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                             />
-                            <input
-                                type="text"
-                                name="status"
-                                value={formData.status}
-                                onChange={handleChange}
-                                placeholder="Status"
-                                className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            />
+                            
                         </div>
                         <div className="flex justify-end mt-6">
                             <button
@@ -152,3 +145,5 @@ const AddProduct = () => {
 };
 
 export default AddProduct;
+
+
