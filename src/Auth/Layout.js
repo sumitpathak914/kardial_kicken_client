@@ -13,7 +13,7 @@ const Layout = () => {
             {/* Conditionally render SidebarComponent */}
             {!isHomePage && <SidebarComponent />}
             {/* Main Content */}
-            <div className="flex-1 min-h-screen p-6 bg-gray-100">
+            <div className="flex-1 min-h-screen bg-gray-100">
                 <Outlet />
             </div>
         </div>

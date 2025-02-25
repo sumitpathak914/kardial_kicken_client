@@ -1,5 +1,33 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackExposePanal from "./Base/BackExposePanal";
+import Cornercabinate from "./Base/Cornercabinate";
+import CornerCabinateThreeFourth from "./Base/CornerCabinateThreeFourth";
+import Crockerycabinter from "./Base/Crockerycabinter";
+import Mscubecabinate from "./Base/Mscubecabinate";
+import OpenCabinate from "./Base/OpenCabinate";
+import SideExpose from "./Base/SideExpose";
+import MeasurementImageUploader from "./MeasurementImageUploader";
+import CabinetCalculator from "./Quatation";
+import RequrementGathring from "./RequrementGathring";
+import WallRegularCabinet from "./wall/WallRegularcabinet";
+import WallCornerCabinet from "./wall/WallCornerCabinet";
+import ThreeFourthCornerCabinet from "./wall/ThreeFourthCornerCabinet";
+import OpenWallCabinet from "./wall/OpenWallCabinet";
+import CrockeryWallCabinet from "./wall/CrockeryWallCabinet";
+import MsCubeWallCabinet from "./wall/MsCubeWallCabinet";
+import RollingWallCabinet from "./wall/RollingWallCabinet";
+import SideExposeWallCabiet from "./wall/SideExposeWallCabiet";
+import BottomOrBackExposeWall from "./wall/BottomOrBackExposeWall";
+import RegularCabinetTall from "./Tall/RegularCabinetTall";
+import CornerCabinetTall from "./Tall/CornerCabinetTall";
+import ThreeFourthTallCabinet from "./Tall/ThreeFourthTallCabinet";
+import ThreeFourthTall from "./Tall/ThreeFourthTall";
+import OpenCabinetTall from "./Tall/OpenCabinetTall";
+import CrockeryCabinetTall from "./Tall/CrockeryCabinetTall";
+import MsCubeTall from "./Tall/MsCubeTall";
+import SideExposeTall from "./Tall/SideExposeTall";
+import BackExposePanalTall from "./Tall/BackExposePanalTall";
 
 const CreateProcess = () => {
     const [currentStep, setCurrentStep] = useState(0);
@@ -13,7 +41,25 @@ const CreateProcess = () => {
         additionalInfo: "",
         files: [], // New state for storing files
     });
+    const [formDatastep2, setFormDatastep2] = useState({
+        cabinetType: '',
+        subCabinetType: '',
+        additionalInfo: '',
+    });
+    const [cabinetType, setCabinetType] = useState(""); // Base, Wall, Tall
+    const [baseMaterial, setBaseMaterial] = useState("");
+    const [shutterType, setShutterType] = useState("");
+    const [tandemType, setTandemType] = useState("");
+    const [handleType, setHandleType] = useState("");
+    const handleInputChangestep2 = (e) => {
+        const { name, value } = e.target;
+        setFormDatastep2({ ...formData, [name]: value });
+    };
 
+    const handleFormSubmitstep2 = (e) => {
+        e.preventDefault();
+        console.log('Form Submitted:', formData);
+    };
     const navigate = useNavigate();
 
     const steps = [
@@ -85,7 +131,7 @@ const CreateProcess = () => {
     };
 
     return (
-        <div className="p-8 min-h-screen bg-white">
+        <div className="min-h-screen p-8 bg-white">
             <h1 className="mb-8 text-3xl font-semibold text-purple-700">Create Process</h1>
 
             {/* Step Progression */}
@@ -108,211 +154,209 @@ const CreateProcess = () => {
                     Current Step: <span className="font-bold">{steps[currentStep]}</span>
                 </p>
             </div>
-            {currentStep === 0 ? (
-    <form onSubmit={handleFormSubmit} className="p-0 bg-white rounded-lg shadow-md">
 
-        {/* Existing fields for Requirement Gathering */}
-        <div className="mb-2">
-            <label className="block mb-2 font-medium text-gray-700">
-                Date of Studio Visit
-            </label>
-            <input
-                type="date"
-                name="dateOfStudio"
-                value={formData.dateOfStudio}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                required
-            />
-        </div>
-        <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">
-                Client Name
-            </label>
-            <input
-                type="text"
-                name="clientName"
-                value={formData.clientName}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                required
-            />
-        </div>
+            {
+                currentStep === 0 && (
+                    <>
+                        <RequrementGathring handleFormSubmit={handleFormSubmit} />
+                    </>
+                )
+            }
+            {
+                currentStep === 1 && (
+                    <>
+                        <MeasurementImageUploader />
+                    </>
+                )
+            }
 
-        {/* New Fields */}
-        <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">
-                Client Contact
-            </label>
-            <input
-                type="text"
-                name="contact"
-                value={formData.contact}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                required
-            />
-        </div>
-
-        <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">
-                Architect
-            </label>
-            <input
-                type="text"
-                name="architect"
-                value={formData.architect}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                required
-            />
-        </div>
-
-        <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">
-                Architect Contact
-            </label>
-            <input
-                type="text"
-                name="architectContact"
-                value={formData.architectContact}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                required
-            />
-        </div>
-
-        <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">
-                Address
-            </label>
-            <textarea
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                rows="4"
-                required
-            />
-        </div>
-
-        <button
-            type="submit"
-            className="px-6 py-2 text-white bg-purple-600 rounded-md hover:bg-purple-700"
-        >
-            Next
-        </button>
-    </form>
-
-  
-            ) : currentStep === 1 ? (
-                // Form for Measurement Step
-                <form onSubmit={handleFormSubmit} className="p-6 bg-white rounded-lg shadow-md">
-                    {/* Existing fields for Measurement */}
-                    <div className="mb-4">
-                        <label className="block mb-2 font-medium text-gray-700">
-                            Select Cabinet Type
-                        </label>
-                        <select
-                            name="cabinetType"
-                            value={formData.cabinetType}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                            required
-                        >
-                            <option value="">Select a cabinet type</option>
-                            <option value="baseCabinet">Base Cabinet</option>
-                            <option value="wallCabinet">Wall Cabinet</option>
-                            <option value="tallCabinet">Tall Cabinet</option>
-                            <option value="saccharides">Saccharides</option>
-                            <option value="loftCabinet">Loft Cabinet</option>
-                            <option value="others">Others</option>
-                        </select>
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block mb-2 font-medium text-gray-700">
-                            Additional Information
-                        </label>
-                        <textarea
-                            name="additionalInfo"
-                            value={formData.additionalInfo}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                            rows="6"
-                            placeholder="Enter additional details here..."
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="px-6 py-2 text-white bg-purple-600 rounded-md hover:bg-purple-700"
-                    >
-                        Next
-                    </button>
-                </form>
-            ) : currentStep === 2 ? (
-                // Form for Design Step with Multiple File Upload
-                <form onSubmit={handleFormSubmit} className="p-6 bg-white rounded-lg shadow-md">
-                    <div className="mb-4">
-                        <label className="block mb-2 font-medium text-gray-700">
-                            Upload Design Files
-                        </label>
-                        <input
-                            type="file"
-                            multiple
-                            onChange={handleFileChange}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                        />
-                    </div>
-                    {formData.files.length > 0 && (
-                        <div className="mt-4">
-                            <h3 className="text-lg font-medium text-gray-700">Uploaded Files:</h3>
-                            <ul className="list-disc pl-5 mt-2">
-                                {formData.files.map((file, index) => (
-                                    <li key={index} className="flex items-center justify-between">
-                                        <span>{file.name}</span>
-                                        <button
-                                            type="button"
-                                            onClick={() => handleDeleteFile(index)}
-                                            className="text-red-600 hover:text-red-800"
-                                        >
-                                            Delete
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
+            {
+                currentStep === 2 && (
+                    <form onSubmit={handleFormSubmitstep2} className="p-6 bg-white rounded-lg shadow-md">
+                        <div className="mb-4">
+                            <label className="block mb-2 font-medium text-gray-700">
+                                Upload Design Files
+                            </label>
+                            <input
+                                type="file"
+                                multiple
+                                onChange={handleInputChangestep2}
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            />
                         </div>
-                    )}
+                        {formData.files.length > 0 && (
+                            <div className="mt-4">
+                                <h3 className="text-lg font-medium text-gray-700">Uploaded Files:</h3>
+                                <ul className="pl-5 mt-2 list-disc">
+                                    {formData.files.map((file, index) => (
+                                        <li key={index} className="flex items-center justify-between">
+                                            <span>{file.name}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteFile(index)}
+                                                className="text-red-600 hover:text-red-800"
+                                            >
+                                                Delete
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
 
-                    <button
-                        type="submit"
-                        className="px-6 py-2 text-white bg-purple-600 rounded-md hover:bg-purple-700"
-                    >
-                        Next
-                    </button>
-                </form>
-            ) : (
-                // Previous and Next Step Buttons for other steps
-                <div className="flex justify-between mt-8">
-                    <button
-                        onClick={handlePreviousStep}
-                        className={`px-4 py-2 rounded text-sm font-medium transition-all duration-300 ease-in-out ${currentStep === 0
-                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                            : "bg-purple-600 text-white hover:bg-purple-700"
-                            }`}
-                        disabled={currentStep === 0}
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={handleNextStep}
-                        className="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded hover:bg-purple-700 transition-all duration-300 ease-in-out"
-                    >
-                        {currentStep === steps.length - 1 ? "Complete" : "Next"}
-                    </button>
-                </div>
-            )}
+                        <button
+                            type="submit"
+                            className="px-6 py-2 text-white bg-purple-600 rounded-md hover:bg-purple-700"
+                        >
+                            Next
+                        </button>
+                    </form>
+                )
+            }
+            {
+                currentStep === 3 && (
+                    <div className="p-4 bg-gray-100 rounded-lg">
+                        <h2 className="mb-2 text-lg font-bold">Select Cabinet Options</h2>
+
+                        {/* First Dropdown - Select Cabinet Type */}
+                        <div className="mb-4">
+                            <label className="block font-semibold">Select Cabinet Type:</label>
+                            <select
+                                className="w-full p-2 border rounded"
+                                value={cabinetType}
+                                onChange={(e) => setCabinetType(e.target.value)}
+                            >
+                                <option value="">Select</option>
+                                <option value="Base">Base</option>
+                                <option value="Wall">Wall</option>
+                                <option value="Tall">Tall</option>
+                            </select>
+                        </div>
+
+                        {/* Second Dropdown - Select Base Material (Only for Base) */}
+                        {cabinetType !== "" && (
+                            <div className="mb-4">
+                                <label className="block font-semibold">Select Base Material:</label>
+                                <select
+                                    className="w-full p-2 border rounded"
+                                    value={baseMaterial}
+                                    onChange={(e) => setBaseMaterial(e.target.value)}
+                                >
+                                    <option value="">Select</option>
+                                    <option value="Carcass">Carcass</option>
+                                    <option value="SS Frame">SS Frame</option>
+                                    <option value="Ply Partition">Ply Partition</option>
+                                </select>
+                            </div>
+                        )}
+                        
+
+                        {/* Third Dropdown - Select Shutter Type */}
+                        {baseMaterial && (
+                            <div className="mb-4">
+                                <label className="block font-semibold">Select Shutter Type:</label>
+                                <select
+                                    className="w-full p-2 border rounded"
+                                    value={shutterType}
+                                    onChange={(e) => setShutterType(e.target.value)}
+                                >
+                                    <option value="">Select</option>
+                                    <option value="Laminate">Laminate</option>
+                                    <option value="Acrylic">Acrylic</option>
+                                    <option value="Fenix">Fenix</option>
+                                    <option value="PU">PU</option>
+                                    <option value="Glass">Glass</option>
+                                </select>
+                            </div>
+                        )}
+
+                        {/* Fourth Dropdown - Select Tandem Type */}
+                        {shutterType && (
+                            <div className="mb-4">
+                                <label className="block font-semibold">Select Tandem Type:</label>
+                                <select
+                                    className="w-full p-2 border rounded"
+                                    value={tandemType}
+                                    onChange={(e) => setTandemType(e.target.value)}
+                                >
+                                    <option value="">Select</option>
+                                    <option value="Blum Legra">Blum Legra</option>
+                                    <option value="Blum Regular">Blum Regular</option>
+                                    <option value="Hafele">Hafele</option>
+                                    <option value="Grass">Grass</option>
+                                    <option value="Hettich">Hettich</option>
+                                    <option value="Ebco">Ebco</option>
+                                </select>
+                            </div>
+                        )}
+
+                        {/* Fifth Dropdown - Select Handle Type */}
+                        {tandemType && (
+                            <div className="mb-4">
+                                <label className="block font-semibold">Select Handle Type:</label>
+                                <select
+                                    className="w-full p-2 border rounded"
+                                    value={handleType}
+                                    onChange={(e) => setHandleType(e.target.value)}
+                                >
+                                    <option value="">Select</option>
+                                    <option value="J Handle">J Handle</option>
+                                    <option value="Surface">Surface</option>
+                                    <option value="Gola">Gola</option>
+                                    <option value="Regular">Regular</option>
+                                </select>
+                            </div>
+                        )}
+
+                        {/* Conditional Rendering */}
+                        <div className="p-4 mt-4 bg-white border rounded">
+                            {cabinetType === "Base" && (
+                                <>
+                                    <p className="font-semibold text-blue-500">Base Cabinet Selected</p>
+                                    {/* Render Base Cabinet Components */}
+                                    <>
+                                        {/* <CabinetForm /> */}
+                                        <CabinetCalculator />
+                                        <Cornercabinate />
+                                        <CornerCabinateThreeFourth />
+                                        <OpenCabinate />
+                                        <Crockerycabinter />
+                                        <Mscubecabinate />
+                                        <SideExpose />
+                                        <BackExposePanal />
+                                    </>
+                                </>
+                            )}
+
+                            {cabinetType === "Wall" && <>
+                                {/* <CabinetForm /> */}
+                                <WallRegularCabinet />
+                                <WallCornerCabinet />
+                                <ThreeFourthCornerCabinet />
+                                <OpenWallCabinet />
+                                <CrockeryWallCabinet />
+                                <MsCubeWallCabinet />
+                                <RollingWallCabinet />
+                                <SideExposeWallCabiet />
+                                <BottomOrBackExposeWall />
+                            </>}
+                            {cabinetType === "Tall" &&
+                                <>
+                                <RegularCabinetTall />
+                                <CornerCabinetTall />
+                                <ThreeFourthTall />
+                                <OpenCabinetTall />
+                                <CrockeryCabinetTall />
+                                <MsCubeTall />
+                                <SideExposeTall />
+                                <BackExposePanalTall/>
+                                </>
+                               
+                            }
+                        </div>
+                    </div>
+                )
+            }
         </div>
     );
 };

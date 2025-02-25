@@ -25,7 +25,7 @@ const Sidebar = () => {
             {/* Title Section */}
             <div className="p-6 text-4xl font-extrabold text-center text-purple-900 transform hover:scale-105">
                 <span className="text-transparent text-gradient bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-700">
-                    Kardial
+                    Kordial
                 </span>
             </div>
 
