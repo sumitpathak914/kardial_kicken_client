@@ -2,19 +2,20 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { BaseUrl } from "../Auth/Url";
 
 const AddProduct = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [products, setProducts] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-     const [errors, setErrors] = useState({});
-        const [action, setAction] = useState(0);
+    const [errors, setErrors] = useState({});
+    const [action, setAction] = useState(0);
     const [formData, setFormData] = useState({
         name: "",
         quality: "",
         category: "",
         id: "",
-        status:null
+        status: null
     });
 
     // Fetch products when the component loads
@@ -25,7 +26,7 @@ const AddProduct = () => {
     // Fetch products from the API
     const fetchProducts = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/GetProducts");
+            const response = await fetch(`${BaseUrl}/api/GetProducts`);
             const data = await response.json();
             if (data.statusCode === 200 && data.result) {
                 setProducts(data.data);
@@ -79,8 +80,8 @@ const AddProduct = () => {
             // Decide API based on the action value
             const url =
                 action === 1
-                    ? "http://localhost:8080/api/product_update"
-                    : "http://localhost:8080/api/Add_Product";
+                    ? `${BaseUrl}/api/product_update`
+                    : `${BaseUrl}/api/Add_Product`;
 
             const method = action === 1 ? "PUT" : "POST";
 
@@ -132,7 +133,7 @@ const AddProduct = () => {
                 id: product.id,
                 name: product.productname,
                 quality: product.quality,
-                  quality: product.quality,
+                quality: product.quality,
                 category: product.category,
                 status: product.status
 
@@ -146,7 +147,7 @@ const AddProduct = () => {
         setErrors({})
         setModalOpen(false);
         setAction(0)
-    } 
+    }
     const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 
     // Filter products based on the search term
@@ -157,7 +158,7 @@ const AddProduct = () => {
     );
     const deleteProduct = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/product/${id}`);
+            const response = await axios.delete(`${BaseUrl}/api/product/${id}`);
             if (response.status === 200) {
 
                 fetchProducts()
@@ -171,7 +172,7 @@ const AddProduct = () => {
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-purple-700">Add Product</h1>
                 <button
-                    onClick={() => openModal(null, 0)} 
+                    onClick={() => openModal(null, 0)}
                     className="px-6 py-3 text-white bg-purple-600 rounded-lg hover:bg-purple-700"
                 >
                     Add Product
@@ -217,20 +218,20 @@ const AddProduct = () => {
                                         {product.status === 0 ? "Inactive" : "Active"}
                                     </td>
                                     <td className="px-4 py-2 border border-purple-200">
-                                                                                                            <div className="flex items-center gap-2">
-                                                                                                              <button
-                                                onClick={() => openModal(product, 1)} 
-                                                                                                                className="text-purple-600 hover:text-purple-800"
-                                                                                                              >
-                                                                                                                <FaEdit />
-                                                                                                              </button>
-                                                                                              <button className="text-red-600 hover:text-red-800"
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => openModal(product, 1)}
+                                                className="text-purple-600 hover:text-purple-800"
+                                            >
+                                                <FaEdit />
+                                            </button>
+                                            <button className="text-red-600 hover:text-red-800"
                                                 onClick={() => deleteProduct(product.id)}
-                                                                                              >
-                                                                                                                <FaTrash />
-                                                                                                              </button>
-                                                                                                            </div>
-                                                                                                          </td>
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))
                         ) : (

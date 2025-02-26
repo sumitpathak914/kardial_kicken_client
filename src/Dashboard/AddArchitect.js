@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { BaseUrl } from "../Auth/Url";
+import { TripleDES } from "crypto-js";
+import { BiTerminal } from "react-icons/bi";
+import { generatePath } from "react-router-dom";
 
 const AddArchitect = () => {
     const [isModalOpen, setModalOpen] = useState(false);
@@ -25,7 +29,7 @@ const AddArchitect = () => {
 
     const fetchArchitects = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/GetArchitech");
+            const response = await axios.get(`${BaseUrl}/api/GetArchitech`);
             if (response.data.statusCode === 200) {
                 setArchitects(response.data.data);
             }
@@ -77,7 +81,7 @@ const AddArchitect = () => {
         try {
             if (action === 1) {
                 // Call the Update API
-                await axios.put("http://localhost:8080/api/architech_update", {
+                await axios.put(`${BaseUrl}/api/architech_update`, {
                     name: formData.name,
                     status: formData.status,
                     city: formData.city,
@@ -87,7 +91,7 @@ const AddArchitect = () => {
                 });
             } else {
                 // Call the Add API
-                await axios.post("http://localhost:8080/api/Add_architech", {
+                await axios.post(`${BaseUrl}/api/Add_architech`, {
                     name: formData.name,
                     number: formData.mobile,
                     email: formData.email,
@@ -151,7 +155,7 @@ const AddArchitect = () => {
 
     const deleteArchitech = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/architech/${id}`);
+            const response = await axios.delete(`${BaseUrl}/api/architech/${id}`);
             if (response.status === 200) {
 
                 fetchArchitects()
@@ -314,3 +318,4 @@ const AddArchitect = () => {
 };
 
 export default AddArchitect;
+

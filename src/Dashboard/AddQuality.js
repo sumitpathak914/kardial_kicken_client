@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { BaseUrl } from "../Auth/Url";
 
 const AddQuality = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -29,7 +30,7 @@ const AddQuality = () => {
     const fetchQualities = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:8080/api/GetQuality"
+                `${BaseUrl}/api/GetQuality`
             );
             if (response.data.statusCode === 200 && response.data.result) {
                 setQualities(response.data.data);
@@ -40,7 +41,7 @@ const AddQuality = () => {
     };
     const fetchCategories = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/GetCategories");
+            const response = await axios.get(`${BaseUrl}/api/GetCategories`);
             if (response.data.statusCode === 200 && response.data.result) {
                 setCategories(response.data.data);
             }
@@ -83,7 +84,7 @@ const AddQuality = () => {
 
             // If action is 1, update the quality
             if (action === 1) {
-                response = await axios.put("http://localhost:8080/api/Quality_update", {
+                response = await axios.put(`${BaseUrl}/api/Quality_update`, {
                     id: formData.id, // Ensure the formData contains an `id` field for updating
                     name: formData.name,
                     Categories_name: formData.category,
@@ -91,7 +92,7 @@ const AddQuality = () => {
                 });
             } else {
                 // Else add the quality
-                response = await axios.post("http://localhost:8080/api/Add_Quality", {
+                response = await axios.post(`${BaseUrl}/api/Add_Quality`, {
                     name: formData.name,
                     Categories_name: formData.category,
                 });
@@ -156,7 +157,7 @@ const AddQuality = () => {
 
     const deleteQuality = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/Quality/${id}`);
+            const response = await axios.delete(`${BaseUrl}/api/Quality/${id}`);
             if (response.status === 200) {
 
                 fetchQualities()

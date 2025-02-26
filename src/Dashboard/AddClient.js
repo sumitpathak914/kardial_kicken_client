@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { BaseUrl } from "../Auth/Url";
 
 const AddClient = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -34,7 +35,7 @@ const AddClient = () => {
 
   const fetchClients = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/GetClient');
+      const response = await fetch(`${BaseUrl}/api/GetClient`);
       const data = await response.json();
       if (data.statusCode === 200) {
         setClients(data.data);
@@ -83,7 +84,7 @@ const AddClient = () => {
       setLoading(true);
       if (action === 1) {
         // Update Client API
-        const response = await fetch("http://localhost:8080/api/Client_update", {
+        const response = await fetch(`${BaseUrl}/api/Client_update`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -113,7 +114,7 @@ const AddClient = () => {
         }
       } else {
         // Add Client API
-        const response = await fetch("http://localhost:8080/api/AddClient", {
+        const response = await fetch(`${BaseUrl}/api/AddClient`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -191,7 +192,7 @@ const AddClient = () => {
 
   const deleteClient = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/api/Client/${id}`);
+      const response = await axios.delete(`${BaseUrl}/api/Client/${id}`);
       if (response.status === 200) {
         
         fetchClients()
@@ -208,7 +209,7 @@ const AddClient = () => {
 
     try {
       // Send the PUT request to update the status
-      const response = await fetch(`http://localhost:8080/api/update_Client_Status`, {
+      const response = await fetch(`${BaseUrl}/api/update_Client_Status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

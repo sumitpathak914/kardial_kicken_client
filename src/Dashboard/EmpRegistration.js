@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 import JoditEditor from "jodit-react";
+import { BaseUrl } from "../Auth/Url";
 
 const EmpRegistration = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -24,7 +25,7 @@ const EmpRegistration = () => {
   // Fetch employees from API
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/employees");
+      const response = await axios.get(`${BaseUrl}/api/employees`);
       if (response.data.statusCode === 200) {
         setEmployees(response.data.data); // Use `data` array from the API response
       } else {
@@ -81,7 +82,7 @@ const EmpRegistration = () => {
 
     try {
       if (action === 0) {
-        const response = await axios.post("http://localhost:8080/api/Add_employees", {
+        const response = await axios.post(`${BaseUrl}/api/Add_employees`, {
           name: formData.name,
           Responsibilities: formData.responsibilities,
           email: formData.email,
@@ -106,7 +107,7 @@ const EmpRegistration = () => {
           fetchEmployees()
         }
       } else {
-        const response = await axios.put("http://localhost:8080/api/employees_update", {
+        const response = await axios.put(`${BaseUrl}/api/employees_update`, {
           name: formData.name,
           id: formData.id,
           Responsibilities: formData.responsibilities,
@@ -201,7 +202,7 @@ const EmpRegistration = () => {
 
   const deleteEmployee = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/api/employees/${id}`);
+      const response = await axios.delete(`${BaseUrl}/api/employees/${id}`);
       if (response.status === 200) {
         // Remove the deleted employee from the state
         setEmployees((prevEmployees) =>
@@ -219,7 +220,7 @@ const EmpRegistration = () => {
 
     try {
       // Send the POST request to update the status
-      const response = await fetch(`http://localhost:8080/api/update_EMP_status`, {
+      const response = await fetch(`${BaseUrl}/api/update_EMP_status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

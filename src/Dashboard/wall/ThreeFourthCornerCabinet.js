@@ -205,15 +205,17 @@ const ThreeFourthCornerCabinet = () => {
                                 )}
                             </td>
                             <td className="p-2 border">
-                                <input
-                                    type="number"
-                                    value={item.qty || ""}
-                                    disabled
-                                    className="w-full p-1 border rounded"
-                                    onChange={(e) =>
-                                        handleInputChange(index, "qty", e.target.value)
-                                    }
-                                />
+                                {(item.description !== "Labour Charges" && item.description !== "Legs") && (
+                                    <input
+                                        type="number"
+                                        value={item.qty || ""}
+                                        disabled
+                                        className="w-full p-1 border rounded"
+                                        onChange={(e) =>
+                                            handleInputChange(index, "qty", e.target.value)
+                                        }
+                                    />
+                                )}
                             </td>
                             <td className="p-2 border">
                                 {item.unit}

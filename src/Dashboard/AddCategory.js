@@ -2,6 +2,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { BaseUrl } from "../Auth/Url";
+import { ImGift } from "react-icons/im";
+import { useBlocker } from "react-router-dom";
+import { TbHistory } from "react-icons/tb";
 const AddCategory = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -22,7 +26,7 @@ const AddCategory = () => {
     try {
       // Use GET instead of POST, and pass the category_id as a query parameter
       const response = await axios.get(
-        `http://localhost:8080/api/Get_Options?category_id=${id}`
+        `${BaseUrl}/api/Get_Options?category_id=${id}`
       );
 
       if (response.data && response.data.data) {
@@ -50,7 +54,7 @@ const AddCategory = () => {
   const deleteRecord = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/Delete_Option/${id}`
+        `${BaseUrl}/api/Delete_Option/${id}`
       );
       if (response.status === 200) {
        
@@ -80,7 +84,7 @@ const AddCategory = () => {
   }, []);
   const fetchCategories = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/GetCategories");
+      const response = await fetch(`${BaseUrl}/api/GetCategories`);
       const data = await response.json();
       if (data.statusCode === 200) {
         setCategories(data.data); // Set categories data
@@ -121,7 +125,7 @@ const AddCategory = () => {
       let response;
       if (action === 1) {
         // Call Update API
-        response = await fetch("http://localhost:8080/api/Categories_update", {
+        response = await fetch(`${BaseUrl}/api/Categories_update`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -134,7 +138,7 @@ const AddCategory = () => {
         });
       } else {
         // Call Add API
-        response = await fetch("http://localhost:8080/api/Add_Categories", {
+        response = await fetch(`${BaseUrl}/api/Add_Categorie`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -196,7 +200,7 @@ const AddCategory = () => {
 
   const deleteCategory = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/api/Categories/${id}`);
+      const response = await axios.delete(`${BaseUrl}/api/Categories/${id}`);
       if (response.status === 200) {
 
         fetchCategories()
@@ -210,7 +214,7 @@ const AddCategory = () => {
   const addRecordAPI = async () => {
 
     try {
-      const response = await fetch("http://localhost:8080/api/Add_Option", {
+      const response = await fetch(`${BaseUrl}/api/Add_Option`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -219,7 +223,7 @@ const AddCategory = () => {
           category_id: categoryId,
           option_name: newRecordName,
           rate: newRecordRate,
-        }),
+         }),
       });
 
       const data = await response.json();
@@ -416,6 +420,7 @@ const AddCategory = () => {
             <button
               className="w-full px-4 py-2 text-white bg-gray-500 rounded"
               onClick={closeModalnew}
+             
             >
               Close
             </button>
@@ -428,3 +433,4 @@ const AddCategory = () => {
 };
 
 export default AddCategory;
+
