@@ -13,16 +13,23 @@
 import React, { useEffect, useState } from "react";
 
 import ThreeFourthCornerCabinetCalcultor from "./ThreeFourthCornerCabinetCalcultor";
+import axios from "axios";
 
 
 
-const ThreeFourthCornerCabinet = () => {
+const ThreeFourthCornerCabinet = ({ handleRecordAddW }) => {
     // Sample data for different items
+
+    const [exposeData, setExposeData] = useState([]);
+         const [exposeDataBottom, setExposeDataBottom] = useState([]);
+          const [exposeDataBack, setExposeDataBack] = useState([]);
+     const [selectedRate, setSelectedRate] = useState(0);
+     const [shutterType, setShutterType] = useState("");
     const initialItems = [
         { description: "Base Cabinet", width: 950, thick: 900, height: 600, rate: 15415.23, unit: "MODUL", qty: 1, UNIT: "MODUL", remark: "MARINE PLY" },
-        { description: "Acrylic Shutter 1", width: 600, thick: 18, height: 600, rate: 1470, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
-        { description: "Acrylic Shutter 2", width: 550, thick: 19, height: 600, rate: 1470, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
-        { description: "HANGING PATTA", width: 600, thick: 19, height: 100, rate: 471, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
+        { description: "Shutter 1", width: 600, thick: 18, height: 600, rate: selectedRate, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
+        { description: "Shutter 2", width: 550, thick: 19, height: 600, rate: selectedRate, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
+        { description: "HANGING PATTA", width: 950, thick: 19, height: 100, rate: 471, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
         { description: "SHELF", width: 950, thick: 18, height: 900, rate: 950, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
         { description: "Labour Charges", width: 600, height: 600, rate: 100, unit: "SQ/FT" },
     ];
@@ -30,7 +37,34 @@ const ThreeFourthCornerCabinet = () => {
     const [items, setItems] = useState(initialItems);
 
     const calculateSqFt = (width, height) => (width * height) / 92903.04;
+    const [shutters, setShutters] = useState([]);
+    useEffect(() => {
+        axios.get("http://localhost:5050/shutters/list")
+            .then((response) => {
+                setShutters(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching shutters:", error);
+            });
+    }, []);
+    const Changerateaccordingshutter = (e) => {
+        const selectedShutterName = e.target.value;
+        setShutterType(selectedShutterName);
 
+        // Find the selected shutter object
+        const selectedShutter = shutters.find(shutter => shutter.shutterName.trim() === selectedShutterName);
+        const newRate = selectedShutter ? Number(selectedShutter.rate) : 0;
+        setSelectedRate(newRate);
+
+        // Update the items state with new shutter type and rate
+        setItems(prevItems =>
+            prevItems.map(item =>
+                item.description.includes("Shutter")
+                    ? { ...item, rate: newRate }
+                    : item
+            )
+        );
+    };
     const calculateTotal = (sqFt, rate, unit, description, width) => {
         if (unit === "Qty") {
             return rate; // Return rate as total for 'Qty' items
@@ -64,13 +98,14 @@ const ThreeFourthCornerCabinet = () => {
                 if (skirtingItem) {
                     skirtingItem.width = newValue; // Update Skirting width
                 }
-            }
-
-            if (updatedItems[index].description === "Acrylic Shutter 1") {
                 const labourChargesItem = updatedItems.find(item => item.description === "HANGING PATTA");
                 if (labourChargesItem) {
-                    labourChargesItem.width = newValue; 
+                    labourChargesItem.width = newValue;
                 }
+            }
+
+            if (updatedItems[index].description === "Shutter 1") {
+               
                 const ShelfChargesItem = updatedItems.find(item => item.description === "Labour Charges");
                 if (ShelfChargesItem) {
                     ShelfChargesItem.width = newValue;
@@ -117,7 +152,7 @@ const ThreeFourthCornerCabinet = () => {
             return { ...item, sqFt, total };
         });
         setItems(updatedItems);
-    }, []);
+    }, [shutterType,selectedRate]);
 
     const grandTotal = filteredItems.reduce((sum, item) => {
         // Convert item.total to a number before adding to the sum
@@ -147,6 +182,21 @@ const ThreeFourthCornerCabinet = () => {
 
     return (
         <div className="p-6 ">
+            <div className="mb-4">
+                <label className="block font-semibold">Select Shutter Type:</label>
+                <select
+                    className="w-full p-2 border rounded"
+                    value={shutterType}
+                    onChange={Changerateaccordingshutter}
+                >
+                    <option value="">Select</option>
+                    {shutters.map((shutter) => (
+                        <option key={shutter.id} value={shutter.shutterName.trim()}>
+                            {shutter.shutterName}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <h2 className="mb-4 text-2xl font-bold">3/4TH CORNER CABINET</h2>
             <table className="w-full border border-collapse border-gray-300">
                 <thead>
@@ -166,7 +216,9 @@ const ThreeFourthCornerCabinet = () => {
                 <tbody>
                     {filteredItems.map((item, index) => (
                         <tr key={index} className="bg-white">
-                            <td className="p-2 border">{item.description}</td>
+                            <td className="p-2 border">
+                                {item.description === "Shutter 1" || item.description === "Shutter 2" ? `${shutterType} ${item.description}` : item.description}
+                            </td>
                             <td className="p-2 border">
                                 {item.description && item.description !== "Legs" && item.description !== "Labour Charges" && (
                                     <input
@@ -200,7 +252,7 @@ const ThreeFourthCornerCabinet = () => {
                                         onChange={(e) =>
                                             handleInputChange(index, "height", e.target.value)
                                         }
-                                        disabled={item.description === "Acrylic Shutter 1" || item.description === "SHELF" || item.description === "Acrylic Shutter 2"}
+                                        disabled={item.description === "Shutter 1" || item.description === "SHELF" || item.description === "Shutter 2"}
                                     />
                                 )}
                             </td>
@@ -269,8 +321,52 @@ const ThreeFourthCornerCabinet = () => {
                     thick={items.find((item) => item.description === "Base Cabinet").thick}
                     height={items.find((item) => item.description === "Base Cabinet").height}
                     onRateUpdate={handleRateUpdate}
+                    setExposeData={setExposeData}
+                    exposeData={exposeData}
+                    exposeDataBottom={exposeDataBottom}
+                    setExposeDataBottom={setExposeDataBottom}
+                    setExposeDataBack={setExposeDataBack}
+                    exposeDataBack={exposeDataBack}
                 />
             )}
+
+            <div className="mt-5">
+                {exposeData.length > 0 && (
+                    <div className="flex items-center gap-2 mt-5">
+                        <p className="font-semibold text-green-600">Side Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("side")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBottom.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Bottom Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("bottom")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBack.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Back Data Expose</p>
+                        {/* <button onClick={() => clearExposeData("back")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+            </div>
+            <div className="flex mt-4 space-x-2">
+                <button
+                    onClick={() => handleRecordAddW({ shutterType, shutterCost: selectedRate, items: items, grandTotal: grandTotal , SideExpose: exposeData, BottomExpose: exposeDataBottom, BackExpose: exposeDataBack })}
+                    className="px-4 py-2 mt-4 text-white bg-green-500 rounded"
+                >
+                    Record Add
+                </button>
+              
+            </div>
         </div>
     );
 };

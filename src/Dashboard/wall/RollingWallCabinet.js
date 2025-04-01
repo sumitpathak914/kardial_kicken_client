@@ -11,10 +11,14 @@
 // export default RollingWallCabinet
 
 import React, { useEffect, useState } from "react";
+import RollingCabinetExpose from "./RollingCabinetExpose";
 
 
-const RollingWallCabinet = () => {
+const RollingWallCabinet = ({ handleRecordAddW }) => {
     // Sample data for different items
+    const [exposeData, setExposeData] = useState([]);
+    const [exposeDataBottom, setExposeDataBottom] = useState([]);
+    const [exposeDataBack, setExposeDataBack] = useState([]);
     const initialItems = [
         { description: "BASE CABINET", width: 600, thick: 350, height: 1300, rate: 5124, unit: "MODUL", qty: "1", remark: "MARINE PLY" },
         { description: "HANGING PATTA", width: 600, thick: 19, height: 100, rate: 471, unit: "SQ/FT", qty: "1", remark: "MARINE PLY" },
@@ -73,7 +77,7 @@ const RollingWallCabinet = () => {
                     item.height = newValue;
                 }
             });
-        }  if (field === "width") {
+        } if (field === "width") {
             if (updatedItems[index].description === "BASE CABINET") {
                 updatedItems[index].width = newValue;
 
@@ -315,6 +319,53 @@ const RollingWallCabinet = () => {
                     onRateUpdate={handleRateUpdate}
                 />
             )} */}
+            <RollingCabinetExpose
+                setExposeData={setExposeData}
+                exposeData={exposeData}
+                exposeDataBottom={exposeDataBottom}
+                setExposeDataBottom={setExposeDataBottom}
+                setExposeDataBack={setExposeDataBack}
+                exposeDataBack={exposeDataBack} />
+
+            <div className="mt-5">
+                {exposeData.length > 0 && (
+                    <div className="flex items-center gap-2 mt-5">
+                        <p className="font-semibold text-green-600">Side Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("side")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBottom.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Bottom Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("bottom")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBack.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Back Data Expose</p>
+                        {/* <button onClick={() => clearExposeData("back")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+            </div>
+            <div className="flex mt-4 space-x-2">
+                <button
+                    onClick={() => handleRecordAddW({ shutterType: null, 0: 0, items: items, grandTotal: grandTotal, SideExpose: exposeData, BottomExpose: exposeDataBottom, BackExpose: exposeDataBack })}
+                    className="px-4 py-2 mt-4 text-white bg-green-500 rounded"
+                >
+                    Record Add
+                </button>
+                {/* <button onClick={handleCancel} className="px-4 py-2 text-white bg-red-500 rounded">
+                                                Cancel
+                                           </button> */}
+            </div>
         </div>
     );
 };

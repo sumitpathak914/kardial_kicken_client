@@ -368,7 +368,7 @@ const AddCategory = () => {
 
       {isModalOpennew && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-4 bg-white rounded shadow-lg w-[500px]">
+          <div className="p-4 bg-white rounded shadow-lg w-[500px] h-[500px] overflow-auto">
             <h2 className="mb-4 text-lg font-bold">Manage Records</h2>
             <ul className="mb-4">
               {records.map((record) => (

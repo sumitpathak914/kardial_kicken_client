@@ -11,11 +11,15 @@
 // export default MsCubeTall
 import React, { useEffect, useState } from "react";
 import MsCubeCalculatorTall from "./MsCubeCalculatorTall";
+import MsCubeExpose from "../wall/MsCubeExpose";
 
 
-const MsCubeTall = () => {
+const MsCubeTall = ({ handleRecordAddT }) => {
     // Sample data for different items
-    const initialItems = [
+    const [exposeData, setExposeData] = useState([]);
+    const [exposeDataBottom, setExposeDataBottom] = useState([]);
+    const [exposeDataBack, setExposeDataBack] = useState([]);
+    const initialItems = [ 
         { description: "MS CUBE", width: 600, thick: 300, height: 770, rate: 4000, unit: "MODUL", qty: "1", remark: "MARINE PLY" },
         { description: "SHELF WOODEN", width: 600, thick: 18, height: 300, rate: 950, unit: "SQ/FT", qty: "1", remark: "MARINE PLY" },
         { description: "SHELF GLASS", width: 600, thick: 19, height: 18, rate: 250, unit: "SQ/FT", qty: "2", remark: "MARINE PLY" },
@@ -306,6 +310,50 @@ const MsCubeTall = () => {
                     onRateUpdate={handleRateUpdate}
                 />
             )}
+            <MsCubeExpose
+                setExposeData={setExposeData}
+                exposeData={exposeData}
+                exposeDataBottom={exposeDataBottom}
+                setExposeDataBottom={setExposeDataBottom}
+                setExposeDataBack={setExposeDataBack}
+                exposeDataBack={exposeDataBack}
+            />
+            <div className="mt-5">
+                {exposeData.length > 0 && (
+                    <div className="flex items-center gap-2 mt-5">
+                        <p className="font-semibold text-green-600">Side Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("side")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBottom.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Bottom Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("bottom")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBack.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Back Data Expose</p>
+                        {/* <button onClick={() => clearExposeData("back")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+            </div>
+            <div className="flex mt-4 space-x-2">
+                <button
+                    onClick={() => handleRecordAddT({ shutterType: null, 0: 0, items: items, grandTotal: grandTotal, SideExpose: exposeData, BottomExpose: exposeDataBottom, BackExpose: exposeDataBack })}
+                    className="px-4 py-2 mt-4 text-white bg-green-500 rounded"
+                >
+                    Record Add
+                </button>
+            </div>
         </div>
     );
 };

@@ -13,6 +13,7 @@ import AddQuality from './Dashboard/AddQuality';
 import AddProduct from './Dashboard/AddProduct';
 import Process from './Dashboard/Process';
 import CreateProcess from './Dashboard/createProcess';
+import RateSection from './Dashboard/RateSection';
 
 
 
@@ -64,9 +65,13 @@ function App() {
           <Route path="/Final_Client" element={<ProtectedRoute>
             <Process />
           </ProtectedRoute>} />
-          <Route path="/create-process" element={<ProtectedRoute>
-            <CreateProcess />
+          <Route path="/Rate-Section" element={<ProtectedRoute>
+            <RateSection />
           </ProtectedRoute>} />
+          
+          <Route path="/create-process" element={
+            <CreateProcess />
+      } />
 
         </Routes>
       </div>

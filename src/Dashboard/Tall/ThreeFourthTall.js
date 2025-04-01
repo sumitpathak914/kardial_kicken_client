@@ -1,39 +1,24 @@
-// import React from 'react'
 
-// const ThreeFourthTall = () => {
-//   return (
-//     <div>
-
-//     </div>
-//   )
-// }
-
-// export default ThreeFourthTall
-// import React from 'react'
-
-// const ThreeFourthCornerCabinet = () => {
-//   return (
-//     <div>
-
-//     </div>
-//   )
-// }
-
-// export default ThreeFourthCornerCabinet
 
 import React, { useEffect, useState } from "react";
 import ThreeFourthTallCabinet from "./ThreeFourthTallCabinet";
+import axios from "axios";
 
 
 
 
 
-const ThreeFourthTall = () => {
+const ThreeFourthTall = ({ handleRecordAddT }) => {
     // Sample data for different items
+     const [exposeData, setExposeData] = useState([]);
+                         const [exposeDataBottom, setExposeDataBottom] = useState([]);
+                          const [exposeDataBack, setExposeDataBack] = useState([]);
+     const [selectedRate, setSelectedRate] = useState(0);
+    const [shutterType, setShutterType] = useState("");
     const initialItems = [
         { description: "Base Cabinet", width: 950, thick: 900, height: 2100, rate: 15415.23, unit: "MODUL", qty: 1, UNIT: "MODUL", remark: "MARINE PLY" },
-        { description: "Acrylic Shutter 1", width: 350, thick: 18, height: 2100, rate: 1470, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
-        { description: "Acrylic Shutter 2", width: 300, thick: 19, height: 2100, rate: 1470, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
+        { description: "Shutter 1", width: 350, thick: 18, height: 2100, rate: selectedRate, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
+        { description: "Shutter 2", width: 300, thick: 19, height: 2100, rate: selectedRate, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
         { description: "HANGING PATTA", width: 950, thick: 19, height: 100, rate: 471, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
         { description: "Legs", width: 0, height: 0, rate: 400, unit: "Qty", remark: "HETTICH" },
         { description: "Skirting", width: 950, thick: 18, height: 900, rate: 0.66, unit: "SQ/FT", qty: 1, UNIT: "SQ/FT", remark: "MARINE PLY" },
@@ -41,7 +26,34 @@ const ThreeFourthTall = () => {
     ];
 
     const [items, setItems] = useState(initialItems);
+    const [shutters, setShutters] = useState([]);
+    useEffect(() => {
+        axios.get("http://localhost:5050/shutters/list")
+            .then((response) => {
+                setShutters(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching shutters:", error);
+            });
+    }, []);
+    const Changerateaccordingshutter = (e) => {
+        const selectedShutterName = e.target.value;
+        setShutterType(selectedShutterName);
 
+        // Find the selected shutter object
+        const selectedShutter = shutters.find(shutter => shutter.shutterName.trim() === selectedShutterName);
+        const newRate = selectedShutter ? Number(selectedShutter.rate) : 0;
+        setSelectedRate(newRate);
+
+        // Update the items state with new shutter type and rate
+        setItems(prevItems =>
+            prevItems.map(item =>
+                item.description.includes("Shutter")
+                    ? { ...item, rate: newRate }
+                    : item
+            )
+        );
+    };
     const calculateSqFt = (width, height) => (width * height) / 92903.04;
 
     const calculateTotal = (sqFt, rate, unit, description, width) => {
@@ -85,8 +97,8 @@ const ThreeFourthTall = () => {
                 }
             }
 
-            if (updatedItems[index].description === "Acrylic Shutter 1") {
-                
+            if (updatedItems[index].description === "Shutter 1") {
+
                 const ShelfChargesItem = updatedItems.find(item => item.description === "Labour Charges");
                 if (ShelfChargesItem) {
                     ShelfChargesItem.width = newValue;
@@ -133,7 +145,7 @@ const ThreeFourthTall = () => {
             return { ...item, sqFt, total };
         });
         setItems(updatedItems);
-    }, []);
+    }, [selectedRate,shutterType]);
 
     const grandTotal = filteredItems.reduce((sum, item) => {
         // Convert item.total to a number before adding to the sum
@@ -163,6 +175,21 @@ const ThreeFourthTall = () => {
 
     return (
         <div className="p-6 ">
+            <div className="mb-4">
+                <label className="block font-semibold">Select Shutter Type:</label>
+                <select
+                    className="w-full p-2 border rounded"
+                    value={shutterType}
+                    onChange={Changerateaccordingshutter}
+                >
+                    <option value="">Select</option>
+                    {shutters.map((shutter) => (
+                        <option key={shutter.id} value={shutter.shutterName.trim()}>
+                            {shutter.shutterName}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <h2 className="mb-4 text-2xl font-bold">3/4TH CORNER CABINET</h2>
             <table className="w-full border border-collapse border-gray-300">
                 <thead>
@@ -182,7 +209,9 @@ const ThreeFourthTall = () => {
                 <tbody>
                     {filteredItems.map((item, index) => (
                         <tr key={index} className="bg-white">
-                            <td className="p-2 border">{item.description}</td>
+                            <td className="p-2 border">
+                                {item.description === "Shutter 1" || item.description === "Shutter 2" ? `${shutterType} ${item.description}` : item.description}
+                            </td>
                             <td className="p-2 border">
                                 {item.description && item.description !== "Legs" && item.description !== "Labour Charges" && (
                                     <input
@@ -216,7 +245,7 @@ const ThreeFourthTall = () => {
                                         onChange={(e) =>
                                             handleInputChange(index, "height", e.target.value)
                                         }
-                                        disabled={item.description === "Acrylic Shutter 1" || item.description === "SHELF" || item.description === "Acrylic Shutter 2"}
+                                        disabled={item.description === "Shutter 1" || item.description === "SHELF" || item.description === "Shutter 2"}
                                     />
                                 )}
                             </td>
@@ -285,8 +314,51 @@ const ThreeFourthTall = () => {
                     thick={items.find((item) => item.description === "Base Cabinet").thick}
                     height={items.find((item) => item.description === "Base Cabinet").height}
                     onRateUpdate={handleRateUpdate}
+                    setExposeData={setExposeData}
+                    exposeData={exposeData}
+                    exposeDataBottom={exposeDataBottom}
+                    setExposeDataBottom={setExposeDataBottom}
+                    setExposeDataBack={setExposeDataBack}
+                    exposeDataBack={exposeDataBack}
                 />
             )}
+
+            <div className="mt-5">
+                {exposeData.length > 0 && (
+                    <div className="flex items-center gap-2 mt-5">
+                        <p className="font-semibold text-green-600">Side Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("side")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBottom.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Bottom Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("bottom")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBack.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Back Data Expose</p>
+                        {/* <button onClick={() => clearExposeData("back")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+            </div>
+            <div className="flex mt-4 space-x-2">
+                <button
+                    onClick={() => handleRecordAddT({ shutterType, shutterCost: selectedRate, items: items, grandTotal: grandTotal, SideExpose: exposeData, BottomExpose: exposeDataBottom, BackExpose: exposeDataBack })}
+                    className="px-4 py-2 mt-4 text-white bg-green-500 rounded"
+                >
+                    Record Add
+                </button>
+            </div>
         </div>
     );
 };

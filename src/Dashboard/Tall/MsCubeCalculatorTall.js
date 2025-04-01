@@ -1,25 +1,4 @@
-// import React from 'react'
 
-// const MsCubeCalculatorTall = () => {
-//   return (
-//     <div>
-      
-//     </div>
-//   )
-// }
-
-// export default MsCubeCalculatorTall
-// import React from 'react'
-
-// const MsCubeCabinetCalculator = () => {
-//   return (
-//     <div>
-      
-//     </div>
-//   )
-// }
-
-// export default MsCubeCabinetCalculator
 
 import { useState, useEffect } from "react";
 

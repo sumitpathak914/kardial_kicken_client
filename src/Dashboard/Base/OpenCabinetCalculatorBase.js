@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react'
 const calculateComponentAreaInFeet = (w, d, quantity) => {
   return (w * d * quantity) / (304.8 * 304.8);
@@ -16,7 +15,7 @@ const calculateRate = (width, thick, height, ratePerSqFt, backRate) => {
     return total + calculateComponentAreaInFeet(w, d, quantity) * rate;
   }, 0).toFixed(2);
 };
-const OpenWallCabinetCalcultor = ({ setExposeData, exposeData, exposeDataBottom, setExposeDataBottom, setExposeDataBack, exposeDataBack }) => {
+const OpenCabinetCalculatorBase = ({ setExposeData, exposeData, exposeDataBottom, setExposeDataBottom, setExposeDataBack, exposeDataBack }) => {
 
   const [showModalExpose, setShowModalExpose] = useState(false);
       const [selectedExpose, setSelectedExpose] = useState("");
@@ -468,4 +467,4 @@ const OpenWallCabinetCalcultor = ({ setExposeData, exposeData, exposeDataBottom,
   )
 }
 
-export default OpenWallCabinetCalcultor
+export default OpenCabinetCalculatorBase

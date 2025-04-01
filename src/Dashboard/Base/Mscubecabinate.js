@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import MsCubeCabinetCalculator from "./MsCubeCabinetCalculator";
+import MsCubeExpose from "./MsCubeExpose";
 
-const Mscubecabinate = () => {
+const Mscubecabinate = ({ handleRecordAdd }) => {
+    const [exposeData, setExposeData] = useState([]);
+    const [exposeDataBottom, setExposeDataBottom] = useState([]);
+    const [exposeDataBack, setExposeDataBack] = useState([]);
     // Sample data for different items
     const initialItems = [
         { description: "MS CUBE", width: 600, thick: 300, height: 770, rate: 4000, unit: "MODUL", qty: "1", remark: "MARINE PLY" },
@@ -13,7 +17,7 @@ const Mscubecabinate = () => {
     ];
 
     const [items, setItems] = useState(initialItems);
-
+    const [shutterType, setShutterType] = useState("");
     const calculateSqFt = (width, height) => (width * height) / 92903.04;
 
     const calculateTotal = (sqFt, rate, unit, description, width, qty) => {
@@ -28,7 +32,7 @@ const Mscubecabinate = () => {
             return sqFt * rate; // Labour Charges based on sqFt and quantity
         }
         if (description === "Legs") {
-            return  rate; // Labour Charges based on sqFt and quantity
+            return rate; // Labour Charges based on sqFt and quantity
         }
         return baseTotal * qty; // Default calculation for other items
     };
@@ -120,17 +124,16 @@ const Mscubecabinate = () => {
         });
 
         // Update Labour Charges based on SHELF WOODEN and SHELF GLASS square footage
-        const shelfWooden = updatedItems.find(item => item.description === "SHELF WOODEN");
-        const shelfGlass = updatedItems.find(item => item.description === "SHELF GLASS");
+        const MSCUBESQT = updatedItems.find(item => item.description === "MS CUBE");
         const labourCharges = updatedItems.find(item => item.description === "Labour Charges");
 
         if (labourCharges) {
-            const totalSqFt = (shelfWooden?.sqFt || 0) + (shelfGlass?.sqFt || 0);
+            const totalSqFt = (MSCUBESQT?.sqFt || 0);
             labourCharges.sqFt = totalSqFt;
             labourCharges.total = totalSqFt * labourCharges.rate; // Corrected total calculation
         }
         setItems(updatedItems);
-    },[items]);
+    }, [items]);
 
     const grandTotal = filteredItems.reduce((sum, item) => {
         return sum + (Number(item.total) || 0); // Ensures item.total is a number
@@ -155,6 +158,21 @@ const Mscubecabinate = () => {
 
     return (
         <div className="p-6">
+            {/* <div className="mb-4">
+                <label className="block font-semibold">Select Shutter Type:</label>
+                <select
+                    className="w-full p-2 border rounded"
+                    value={shutterType}
+                    onChange={(e) => setShutterType(e.target.value)}
+                >
+                    <option value="">Select</option>
+                    <option value="Laminate">Laminate</option>
+                    <option value="Acrylic">Acrylic</option>
+                    <option value="Fenix">Fenix</option>
+                    <option value="PU">PU</option>
+                    <option value="Glass">Glass</option>
+                </select>
+            </div> */}
             <h2 className="mb-4 text-2xl font-bold">MS CUBE</h2>
             <table className="w-full border border-collapse border-gray-300">
                 <thead>
@@ -273,6 +291,50 @@ const Mscubecabinate = () => {
                     onRateUpdate={handleRateUpdate}
                 />
             )}
+            <MsCubeExpose
+                setExposeData={setExposeData}
+                exposeData={exposeData}
+                exposeDataBottom={exposeDataBottom}
+                setExposeDataBottom={setExposeDataBottom}
+                setExposeDataBack={setExposeDataBack}
+                exposeDataBack={exposeDataBack}
+            />
+
+            <div className="mt-5">
+                {exposeData.length > 0 && (
+                    <div className="flex items-center gap-2 mt-5">
+                        <p className="font-semibold text-green-600">Side Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("side")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBottom.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Bottom Expose Added</p>
+                        {/* <button onClick={() => clearExposeData("bottom")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+
+                {exposeDataBack.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <p className="font-semibold text-green-600">Back Data Expose</p>
+                        {/* <button onClick={() => clearExposeData("back")} className="px-2 py-1 text-white bg-red-500 rounded">
+                        Delete
+                    </button> */}
+                    </div>
+                )}
+            </div>
+           
+            <button
+                onClick={() => handleRecordAdd({ shutterType, 0: 0, items: items, grandTotal: grandTotal, SideExpose: exposeData, BottomExpose: exposeDataBottom, BackExpose: exposeDataBack })}
+                className="px-4 py-2 mt-4 text-white bg-green-500 rounded"
+            >
+                Record Add
+            </button>
         </div>
     );
 };
